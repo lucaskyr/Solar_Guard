@@ -1,0 +1,48 @@
+#define TRIG_PIN 4
+#define ECHO_PIN 2
+
+#define IR_SENSOR_PIN 5
+
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  pinMode(IR_SENSOR_PIN, INPUT);
+
+  Serial.println("Iniciando sensores...");
+}
+
+void loop() {
+
+  long duration;
+  float distance_cm;
+
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  duration = pulseIn(ECHO_PIN, HIGH, 30000); 
+  distance_cm = duration * 0.034 / 2;
+
+  Serial.print("Distância HC-SR04 (cm): ");
+  if (duration == 0) {
+    Serial.println("Fora de alcance ou erro");
+  } else {
+    Serial.println(distance_cm, 2);
+  }
+
+  int irValue = digitalRead(IR_SENSOR_PIN);
+  Serial.print("Sensor IR (TCRT5000): ");
+  if (irValue == LOW) {
+    Serial.println("🔴 Objeto detectado");
+  } else {
+    Serial.println("⚪ Nada detectado");
+  }
+
+  Serial.println("-------------------------");
+  delay(500);
+}
